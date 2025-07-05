@@ -19,6 +19,11 @@ public enum ErrorCode {
     //409 CONFLICT : 리소스 충돌
     EXIST_USER_EMAIL(HttpStatus.CONFLICT, "중복된 이메일이 존재합니다."),
     SEAT_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 존재하는 좌석입니다."),
+    IS_ALREADY_RESERVATION(HttpStatus.CONFLICT, "이미 예약 된 좌석입니다."),
+    SEAT_ALREADY_LOCKED(HttpStatus.CONFLICT, "다른 사용자가 이미 선택한 좌석입니다."),
+    SEAT_LOCK_RETRY_NEEDED(HttpStatus.CONFLICT,"좌석 선점 중 충돌이 발생했습니다. 다시 시도해주세요."),
+    SEAT_LOCK_EXPIRED(HttpStatus.CONFLICT, "좌석 점유 시간이 만료되었습니다. 다시 선택해주세요."),
+
 
     //405 METHOD_NOT_ALLOWED : 허용 되지않은 Request Method 호출
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 메서드 호출입니다."),

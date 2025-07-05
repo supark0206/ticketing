@@ -2,17 +2,21 @@ package com.concertmania.ticketing.seat.controller;
 
 import com.concertmania.ticketing.seat.dto.SeatCreateRequest;
 import com.concertmania.ticketing.seat.dto.SeatResponse;
+import com.concertmania.ticketing.seat.dto.SeatSelectResponse;
 import com.concertmania.ticketing.seat.dto.SeatUpdateRequest;
 import com.concertmania.ticketing.seat.service.SeatService;
+import com.concertmania.ticketing.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
+
 import java.util.List;
 
 @RestController
@@ -51,6 +55,16 @@ public class SeatController implements SeatControllerDocs {
     @GetMapping("/{id}")
     public ResponseEntity<SeatResponse> getSeat(@PathVariable Long id) {
         SeatResponse seat = seatService.getSeat(id);
+        return ResponseEntity.ok(seat);
+    }
+
+    @PostMapping("/{id}/select")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<SeatSelectResponse> selectSeat(
+            @PathVariable Long id,
+            @AuthenticationPrincipal User user
+    ) {
+        SeatSelectResponse seat = seatService.selectSeat(id, user);
         return ResponseEntity.ok(seat);
     }
 
