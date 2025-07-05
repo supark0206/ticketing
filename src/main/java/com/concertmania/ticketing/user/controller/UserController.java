@@ -1,5 +1,6 @@
 package com.concertmania.ticketing.user.controller;
 
+import com.concertmania.ticketing.user.docs.UserControllerDocs;
 import com.concertmania.ticketing.user.dto.UserResponse;
 import com.concertmania.ticketing.user.dto.LoginRequest;
 import com.concertmania.ticketing.user.dto.SignupRequest;
