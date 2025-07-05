@@ -72,7 +72,7 @@ public class UserService {
 
         String token = jwtTokenProvider.createToken(authentication);
         
-        User user = userRepository.findByEmail(request.getEmail())
+        User user = userRepository.findByEmailAndDeletedAtIsNull(request.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("사용자를 찾을 수 없습니다."));
 
         return UserResponse.builder()
