@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/seat")
 @RequiredArgsConstructor
-public class SeatController {
+public class SeatController implements SeatControllerDocs {
 
     private final SeatService seatService;
 
