@@ -23,6 +23,11 @@ public enum ErrorCode {
     SEAT_ALREADY_LOCKED(HttpStatus.CONFLICT, "다른 사용자가 이미 선택한 좌석입니다."),
     SEAT_LOCK_RETRY_NEEDED(HttpStatus.CONFLICT,"좌석 선점 중 충돌이 발생했습니다. 다시 시도해주세요."),
     SEAT_LOCK_EXPIRED(HttpStatus.CONFLICT, "좌석 점유 시간이 만료되었습니다. 다시 선택해주세요."),
+    QUEUE_TOKEN_NOT_FOUND(HttpStatus.CONFLICT, "대기열 토큰을 찾을 수 없습니다."),
+    QUEUE_NOT_ACTIVE(HttpStatus.CONFLICT, "활성 상태가 아닌 대기열입니다."),
+    ALREADY_IN_QUEUE(HttpStatus.CONFLICT, "이미 대기열에 등록되어 있습니다."),
+    QUEUE_NOT_FOUND(HttpStatus.NOT_FOUND, "대기열 정보를 찾을 수 없습니다."),
+    SEAT_NOT_SELECTED(HttpStatus.NOT_FOUND, "선택된 좌석을 찾을 수 없습니다."),
 
 
     //405 METHOD_NOT_ALLOWED : 허용 되지않은 Request Method 호출
