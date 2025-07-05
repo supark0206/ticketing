@@ -34,23 +34,6 @@ public class ConcertRepositoryImpl implements ConcertRepositoryCustom {
     }
 
     @Override
-    public Page<Concert> findAllNotDeleted(Pageable pageable) {
-        List<Concert> concerts = queryFactory
-                .selectFrom(concert)
-                .where(notDeleted())
-                .offset(pageable.getOffset())
-                .limit(pageable.getPageSize())
-                .fetch();
-
-        JPAQuery<Long> countQuery = queryFactory
-                .select(concert.count())
-                .from(concert)
-                .where(notDeleted());
-
-        return PageableExecutionUtils.getPage(concerts, pageable, countQuery::fetchOne);
-    }
-
-    @Override
     public Page<Concert> findAllNotDeletedWithSearch(String title, String venue, Pageable pageable) {
         List<Concert> concerts = queryFactory
                 .selectFrom(concert)
