@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserResponse {
     private String token;
-    private String type = "Bearer";
+    private String type;
     private String email;
     private String username;
     private String role;
