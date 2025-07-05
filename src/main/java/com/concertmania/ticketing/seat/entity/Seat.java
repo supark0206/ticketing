@@ -6,11 +6,13 @@ import com.concertmania.ticketing.utils.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -18,6 +20,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
+@Builder
 @EqualsAndHashCode(of = "id", callSuper = false)
 public class Seat extends BaseTimeEntity {
 
@@ -44,7 +47,20 @@ public class Seat extends BaseTimeEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @OneToMany(mappedBy = "seat", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ReservationSeat> reservationSeats;
+    @OneToMany (
+        mappedBy = "seat",
+        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+        fetch = FetchType.LAZY
+    )
+    @Builder.Default
+    private List<ReservationSeat> reservationSeats = new ArrayList<>();
 
+    public Seat update(String section, String row, String number, String grade, BigDecimal price) {
+        this.section = section;
+        this.row = row;
+        this.number = number;
+        this.grade = grade;
+        this.price = price;
+        return this;
+    }
 }

@@ -32,6 +32,9 @@ public enum ErrorCode {
     CANNOT_DELETE_RESERVED_SEAT(HttpStatus.UNPROCESSABLE_ENTITY, "예약된 좌석은 삭제할 수 없습니다."),
     CONCERT_DATE_AFTER_CLOSE_TIME(HttpStatus.UNPROCESSABLE_ENTITY, "공연일은 예약 마감일보다 이후여야 합니다."),
     CLOSE_TIME_AFTER_OPEN_TIME(HttpStatus.UNPROCESSABLE_ENTITY, "예약 마감일은 예약 시작일보다 이후여야 합니다."),
+    INVALID_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY, "유효하지 않은 요청입니다."),
+    INVALID_CONCERT_ID(HttpStatus.UNPROCESSABLE_ENTITY, "모든 좌석은 동일한 콘서트에 속해야 합니다."),
+    DUPLICATE_SEAT_IN_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY, "요청 내에 중복된 좌석이 있습니다."),
 
     //500 INTERNAL_SERVER_ERROR : 내부 서버 오류
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"내부 서버 오류입니다.")

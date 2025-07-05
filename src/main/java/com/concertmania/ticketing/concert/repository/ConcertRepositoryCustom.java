@@ -6,8 +6,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface ConcertRepositoryCustom {
 
-    Page<Concert> findAllNotDeleted(Pageable pageable);
-
+    // 콘서트 목록 - 검색 - 페이징
     Page<Concert> findAllNotDeletedWithSearch(String title, String venue, Pageable pageable);
 
 }
