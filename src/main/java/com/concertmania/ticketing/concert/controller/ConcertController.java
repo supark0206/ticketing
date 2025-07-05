@@ -17,11 +17,10 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/concert")
 @RequiredArgsConstructor
-public class ConcertController {
+public class ConcertController implements ConcertControllerDocs {
 
     private final ConcertService concertService;
 
-    // 콘서트 생성
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ConcertResponse> createConcert(@Valid @RequestBody ConcertCreateRequest request) {
@@ -29,7 +28,6 @@ public class ConcertController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // 전체 콘서트 조회
     @GetMapping
     public ResponseEntity<Page<ConcertResponse>> getAllConcerts(
             @RequestParam(required = false) String title,
@@ -39,14 +37,12 @@ public class ConcertController {
         return ResponseEntity.ok(concerts);
     }
 
-    // 콘서트 상세 조회
     @GetMapping("/{id}")
     public ResponseEntity<ConcertResponse> getConcert(@PathVariable Long id) {
         ConcertResponse concert = concertService.getConcert(id);
         return ResponseEntity.ok(concert);
     }
 
-    // 콘서트 수정
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ConcertResponse> updateConcert(@PathVariable Long id, @Valid @RequestBody ConcertUpdateRequest request) {
@@ -54,7 +50,6 @@ public class ConcertController {
         return ResponseEntity.ok(response);
     }
 
-    // 콘서트 삭제
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteConcert(@PathVariable Long id) {
