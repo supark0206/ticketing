@@ -2,7 +2,9 @@ package com.concertmania.ticketing.seat.controller;
 
 import com.concertmania.ticketing.seat.dto.SeatCreateRequest;
 import com.concertmania.ticketing.seat.dto.SeatResponse;
+import com.concertmania.ticketing.seat.dto.SeatSelectResponse;
 import com.concertmania.ticketing.seat.dto.SeatUpdateRequest;
+import com.concertmania.ticketing.user.entity.User;
 import com.concertmania.ticketing.utils.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -16,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -510,5 +513,126 @@ public interface SeatControllerDocs {
     ResponseEntity<Void> deleteSeat(
             @Parameter(description = "좌석 ID", example = "1", required = true)
             @PathVariable Long id
+    );
+
+    @Operation(
+            summary = "좌석 선택",
+            description = "좌석을 선택하여 10분간 임시 점유합니다. 일반 사용자 권한이 필요합니다."
+    )
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "좌석 선택 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = SeatSelectResponse.class),
+                            examples = @ExampleObject(
+                                    name = "좌석 선택 성공 예시",
+                                    value = """
+                                    {
+                                        "id": 1,
+                                        "concertId": 1,
+                                        "concertTitle": "IU 콘서트 2024",
+                                        "section": "A",
+                                        "row": "1",
+                                        "number": "1",
+                                        "grade": "VIP",
+                                        "price": 150000.00,
+                                        "isReserved": false,
+                                        "createdAt": "2024-01-01T10:00:00",
+                                        "updatedAt": "2024-01-01T10:00:00",
+                                        "expiresAt": "2024-01-01T10:10:00"
+                                    }
+                                    """
+                            )
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "인증되지 않은 사용자",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "권한 없음 - 일반 사용자 권한 필요",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class)
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "409",
+                    description = "좌석 점유 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = {
+                                    @ExampleObject(
+                                            name = "이미 예약된 좌석",
+                                            value = """
+                                            {
+                                                "status": 409,
+                                                "message": "이미 예약 된 좌석입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "다른 사용자 점유",
+                                            value = """
+                                            {
+                                                "status": 409,
+                                                "message": "다른 사용자가 이미 선택한 좌석입니다."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "점유 시간 만료",
+                                            value = """
+                                            {
+                                                "status": 409,
+                                                "message": "좌석 점유 시간이 만료되었습니다. 다시 선택해주세요."
+                                            }
+                                            """
+                                    ),
+                                    @ExampleObject(
+                                            name = "재시도 필요",
+                                            value = """
+                                            {
+                                                "status": 409,
+                                                "message": "좌석 선점 중 충돌이 발생했습니다. 다시 시도해주세요."
+                                            }
+                                            """
+                                    )
+                            }
+                    )
+            ),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "좌석을 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ErrorResponse.class),
+                            examples = @ExampleObject(
+                                    name = "좌석 없음",
+                                    value = """
+                                    {
+                                        "status": 422,
+                                        "message": "좌석을 찾을 수 없습니다."
+                                    }
+                                    """
+                            )
+                    )
+            )
+    })
+    ResponseEntity<SeatSelectResponse> selectSeat(
+            @Parameter(description = "좌석 ID", example = "1", required = true)
+            @PathVariable Long id,
+            
+            @Parameter(hidden = true)
+            @AuthenticationPrincipal User user
     );
 }
