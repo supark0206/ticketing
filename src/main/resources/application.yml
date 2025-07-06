@@ -1,20 +1,82 @@
 spring:
   application:
     name: ticketing
-  profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
 
+  # 데이터베이스 설정
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ticketing
+    username: postgres
+    password: 1234
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+
+  # JPA 설정
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: create-drop
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.CamelCaseToUnderscoresNamingStrategy
+
+  # Redis 설정
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      timeout: 2000ms
+      jedis:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+
+  # RabbitMQ 설정
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        acknowledge-mode: manual
+        prefetch: 1
+        retry:
+          enabled: true
+          max-attempts: 3
+          initial-interval: 2s
+          multiplier: 2
+
+  # 메일 설정 (MailHog)
+  mail:
+    host: localhost
+    port: 1025
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+          connectiontimeout: 5000
+          timeout: 3000
+          writetimeout: 5000
+
+# 서버 설정
 server:
   port: 8080
 
-# 콘서트 예매 시스템 설정
-concert:
-  reservation:
-    timeout: 600  # 10분
-  max-seats-per-user: 4
-  queue:
-    max-size: 10000
-
+# Swagger 설정
 springdoc:
   packages-to-scan: com.concertmania.ticketing
   packages-to-exclude: com.concertmania.ticketing.domain.generated
@@ -30,13 +92,29 @@ springdoc:
     display-request-duration: true
   show-actuator: true
 
+# JWT 설정
 jwt:
   secret: ${JWT_SECRET:dGlja2V0aW5nLXNlY3JldC1rZXktZm9yLWp3dC10b2tlbi1nZW5lcmF0aW9uLWFuZC12YWxpZGF0aW9uLWluLXNwcmluZy1ib290LWFwcGxpY2F0aW9u}
   token-validity-in-seconds: ${JWT_TOKEN_VALIDITY:86400}  # 24시간
 
-# 대기열 설정
-waiting:
-  queue:
-    max-active-users: 1000  # 최대 활성 사용자 수
-    session-timeout: 600    # 세션 타임아웃 (10분)
-    cleanup-interval: 300   # 정리 작업 간격 (5분)
+# 로깅 설정
+logging:
+  level:
+    com.concertmania.ticketing: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.mail: DEBUG
+    org.springframework.amqp: DEBUG
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 모니터링 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  endpoint:
+    health:
+      show-details: always

@@ -11,8 +11,9 @@ services:
       - postgres
       - redis
       - rabbitmq
+      - mailhog
     environment:
-      - SPRING_PROFILES_ACTIVE=docker
+      - SPRING_PROFILES_ACTIVE=dev
 
   # 데이터베이스
   postgres:
@@ -35,7 +36,20 @@ services:
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
-      - "15672:15672"   # 관리 UI
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    restart: unless-stopped
+
+  # 개발용 이메일 서버
+  mailhog:
+    image: mailhog/mailhog
+    container_name: concert-mailhog
+    ports:
+      - "1025:1025"  # SMTP 포트
+      - "8025:8025"  # Web UI 포트
+    restart: unless-stopped
 
   # 모니터링
   prometheus:
