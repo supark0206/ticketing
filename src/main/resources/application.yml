@@ -1,24 +1,42 @@
 spring:
   application:
     name: ticketing
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
 
-  jpa:
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-    hibernate:
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+server:
+  port: 8080
 
-# ?? ???? ??
+# 콘서트 예매 시스템 설정
 concert:
   reservation:
-    timeout: 600  # 10?
+    timeout: 600  # 10분
   max-seats-per-user: 4
   queue:
     max-size: 10000
 
+springdoc:
+  packages-to-scan: com.concertmania.ticketing
+  packages-to-exclude: com.concertmania.ticketing.domain.generated
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    try-it-out-enabled: true
+    operations-sorter: method
+    tags-sorter: alpha
+    display-request-duration: true
+  show-actuator: true
+
 jwt:
-  expiration: 86400000  # 24??
+  secret: ${JWT_SECRET:dGlja2V0aW5nLXNlY3JldC1rZXktZm9yLWp3dC10b2tlbi1nZW5lcmF0aW9uLWFuZC12YWxpZGF0aW9uLWluLXNwcmluZy1ib290LWFwcGxpY2F0aW9u}
+  token-validity-in-seconds: ${JWT_TOKEN_VALIDITY:86400}  # 24시간
+
+# 대기열 설정
+waiting:
+  queue:
+    max-active-users: 1000  # 최대 활성 사용자 수
+    session-timeout: 600    # 세션 타임아웃 (10분)
+    cleanup-interval: 300   # 정리 작업 간격 (5분)

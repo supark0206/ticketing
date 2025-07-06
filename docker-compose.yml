@@ -1,0 +1,53 @@
+# docker-compose.yml
+services:
+  # 메인 애플리케이션
+  concert-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - redis
+      - rabbitmq
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  # 데이터베이스
+  postgres:
+    image: postgres:15
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: ticketing
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1234
+
+  # 캐시
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  # 메시징
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"   # 관리 UI
+
+  # 모니터링
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
