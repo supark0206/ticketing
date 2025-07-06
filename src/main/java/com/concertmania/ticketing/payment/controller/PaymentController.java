@@ -2,6 +2,7 @@ package com.concertmania.ticketing.payment.controller;
 
 import com.concertmania.ticketing.payment.docs.PaymentControllerDocs;
 import com.concertmania.ticketing.payment.dto.ConfirmPaymentRequest;
+import com.concertmania.ticketing.payment.dto.ConfirmPaymentResponse;
 import com.concertmania.ticketing.payment.dto.PaymentRequest;
 import com.concertmania.ticketing.payment.dto.PaymentResponse;
 import com.concertmania.ticketing.payment.service.PaymentService;
@@ -31,7 +32,7 @@ public class PaymentController implements PaymentControllerDocs {
     }
 
     @PostMapping("/webhook")
-    public ResponseEntity<PaymentResponse> confirmPayment(@Valid @RequestBody ConfirmPaymentRequest request) {
+    public ResponseEntity<ConfirmPaymentResponse> confirmPayment(@Valid @RequestBody ConfirmPaymentRequest request) {
 
         // PG 결제 모킹 → 임의로 성공 or 실패 랜덤하게 만듦
         boolean paymentSuccess = mockPaymentProcess();

@@ -8,7 +8,6 @@ import com.concertmania.ticketing.utils.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -32,19 +31,7 @@ public interface PaymentControllerDocs {
                     description = "결제 시작 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PaymentResponse.class),
-                            examples = @ExampleObject(
-                                    name = "결제 시작 성공 예시",
-                                    value = """
-                                    {
-                                        "reservationId": 1,
-                                        "status": "PAYMENT_PENDING",
-                                        "amount": 50000,
-                                        "pgRequestSuccess": true,
-                                        "transactionId": "txn_123456789"
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = PaymentResponse.class)
                     )
             ),
             @ApiResponse(
@@ -52,16 +39,7 @@ public interface PaymentControllerDocs {
                     description = "잘못된 요청 - 유효성 검사 실패",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "유효성 검사 실패",
-                                    value = """
-                                    {
-                                        "status": 400,
-                                        "message": "결제 금액은 필수입니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -69,16 +47,7 @@ public interface PaymentControllerDocs {
                     description = "인증 실패 - 로그인 필요",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "인증 실패",
-                                    value = """
-                                    {
-                                        "status": 401,
-                                        "message": "로그인이 필요합니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -86,16 +55,7 @@ public interface PaymentControllerDocs {
                     description = "좌석을 찾을 수 없음",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "좌석 없음",
-                                    value = """
-                                    {
-                                        "status": 404,
-                                        "message": "좌석을 찾을 수 없습니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -103,16 +63,7 @@ public interface PaymentControllerDocs {
                     description = "좌석 상태 충돌 - 이미 예약된 좌석",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "좌석 충돌",
-                                    value = """
-                                    {
-                                        "status": 409,
-                                        "message": "이미 예약된 좌석입니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -120,16 +71,7 @@ public interface PaymentControllerDocs {
                     description = "좌석 점유 시간 만료",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "좌석 점유 만료",
-                                    value = """
-                                    {
-                                        "status": 422,
-                                        "message": "좌석 점유 시간이 만료되었습니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             )
     })
@@ -139,29 +81,7 @@ public interface PaymentControllerDocs {
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = PaymentRequest.class),
-                            examples = {
-                                    @ExampleObject(
-                                            name = "카드 결제 요청",
-                                            value = """
-                                            {
-                                                "seatId": 1,
-                                                "paymentMethod": "CARD",
-                                                "amount": 50000
-                                            }
-                                            """
-                                    ),
-                                    @ExampleObject(
-                                            name = "계좌이체 결제 요청",
-                                            value = """
-                                            {
-                                                "seatId": 2,
-                                                "paymentMethod": "BANK_TRANSFER",
-                                                "amount": 30000
-                                            }
-                                            """
-                                    )
-                            }
+                            schema = @Schema(implementation = PaymentRequest.class)
                     )
             )
             @Valid @RequestBody PaymentRequest request,
@@ -179,16 +99,7 @@ public interface PaymentControllerDocs {
                     description = "결제 완료 처리 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = com.concertmania.ticketing.payment.dto.ConfirmPaymentResponse.class),
-                            examples = @ExampleObject(
-                                    name = "결제 완료 처리 성공",
-                                    value = """
-                                    {
-                                        "transactionId": "txn_123456789",
-                                        "isSuccess": true
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = com.concertmania.ticketing.payment.dto.ConfirmPaymentResponse.class)
                     )
             ),
             @ApiResponse(
@@ -196,16 +107,7 @@ public interface PaymentControllerDocs {
                     description = "잘못된 요청 - 유효성 검사 실패",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "유효성 검사 실패",
-                                    value = """
-                                    {
-                                        "status": 400,
-                                        "message": "거래 ID는 필수입니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -213,16 +115,7 @@ public interface PaymentControllerDocs {
                     description = "결제 정보를 찾을 수 없음",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "결제 정보 없음",
-                                    value = """
-                                    {
-                                        "status": 404,
-                                        "message": "결제 정보를 찾을 수 없습니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -230,16 +123,7 @@ public interface PaymentControllerDocs {
                     description = "이미 처리된 결제",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "결제 중복 처리",
-                                    value = """
-                                    {
-                                        "status": 409,
-                                        "message": "이미 처리된 결제입니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -247,16 +131,7 @@ public interface PaymentControllerDocs {
                     description = "예약 만료 또는 이미 처리된 예약",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "예약 만료",
-                                    value = """
-                                    {
-                                        "status": 422,
-                                        "message": "예약이 만료되었습니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             )
     })
@@ -266,15 +141,7 @@ public interface PaymentControllerDocs {
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ConfirmPaymentRequest.class),
-                            examples = @ExampleObject(
-                                    name = "결제 완료 확인 요청",
-                                    value = """
-                                    {
-                                        "transactionId": "txn_123456789"
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ConfirmPaymentRequest.class)
                     )
             )
             @Valid @RequestBody ConfirmPaymentRequest request
