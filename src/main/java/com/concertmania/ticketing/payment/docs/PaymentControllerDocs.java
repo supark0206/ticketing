@@ -179,11 +179,13 @@ public interface PaymentControllerDocs {
                     description = "결제 완료 처리 성공",
                     content = @Content(
                             mediaType = "application/json",
+                            schema = @Schema(implementation = com.concertmania.ticketing.payment.dto.ConfirmPaymentResponse.class),
                             examples = @ExampleObject(
                                     name = "결제 완료 처리 성공",
                                     value = """
                                     {
-                                        "message": "결제 완료 처리 성공"
+                                        "transactionId": "txn_123456789",
+                                        "isSuccess": true
                                     }
                                     """
                             )
@@ -258,7 +260,7 @@ public interface PaymentControllerDocs {
                     )
             )
     })
-    ResponseEntity<PaymentResponse> confirmPayment(
+    ResponseEntity<com.concertmania.ticketing.payment.dto.ConfirmPaymentResponse> confirmPayment(
             @Parameter(
                     description = "결제 완료 확인 요청 정보",
                     required = true,
