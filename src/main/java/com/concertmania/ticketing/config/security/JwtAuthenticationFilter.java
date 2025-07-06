@@ -1,4 +1,4 @@
-package com.concertmania.ticketing.security;
+package com.concertmania.ticketing.config.security;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
