@@ -47,14 +47,6 @@ public class Seat extends BaseTimeEntity {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
-    @OneToMany (
-        mappedBy = "seat",
-        cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-        fetch = FetchType.LAZY
-    )
-    @Builder.Default
-    private List<ReservationSeat> reservationSeats = new ArrayList<>();
-
     public Seat update(String section, String row, String number, String grade, BigDecimal price) {
         this.section = section;
         this.row = row;

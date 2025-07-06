@@ -43,8 +43,8 @@ public class PaymentController implements PaymentControllerDocs {
     }
 
     private boolean mockPaymentProcess() {
-        // 80% 성공률
-        return Math.random() < 0.8;
+        // 50% 성공률
+        return Math.random() < 0.5;
     }
 
 }

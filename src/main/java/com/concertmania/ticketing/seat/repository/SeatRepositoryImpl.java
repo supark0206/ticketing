@@ -1,5 +1,8 @@
 package com.concertmania.ticketing.seat.repository;
 
+import com.concertmania.ticketing.reservation.entity.QReservation;
+import com.concertmania.ticketing.reservation.entity.QReservationSeat;
+import com.concertmania.ticketing.reservation.enums.ReservationStatus;
 import com.concertmania.ticketing.seat.dto.SeatCreateRequest;
 import com.concertmania.ticketing.seat.entity.QSeat;
 import com.concertmania.ticketing.seat.entity.Seat;
@@ -12,15 +15,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 @RequiredArgsConstructor
 public class SeatRepositoryImpl implements SeatRepositoryCustom {
 
     private final JPAQueryFactory queryFactory;
-    private static final QSeat seat = QSeat.seat;
+    QSeat seat = QSeat.seat;
+    QReservationSeat reservationSeat = QReservationSeat.reservationSeat;
+    QReservation reservation = QReservation.reservation;
 
     private BooleanExpression notDeleted() {
         return seat.deletedAt.isNull();
@@ -120,6 +130,50 @@ public class SeatRepositoryImpl implements SeatRepositoryCustom {
                 .fetchFirst();
 
         return count != null;
+    }
+
+    @Override
+    public boolean hasActiveReservations(Long seatId) {
+        QReservationSeat reservationSeat = QReservationSeat.reservationSeat;
+
+        return queryFactory
+                .selectOne()
+                .from(reservationSeat)
+                .where(
+                        reservationSeat.seat.id.eq(seatId)
+                                .and(reservationSeat.reservation.status.in(
+                                        ReservationStatus.IN_PROGRESS,
+                                        ReservationStatus.CONFIRMED
+                                ))
+                )
+                .fetchFirst() != null;
+    }
+
+    @Override
+    public Map<Long, Boolean> getActiveReservationStatusBySeatIds(List<Long> seatIds) {
+        if (seatIds == null || seatIds.isEmpty()) {
+            return new HashMap<>();
+        }
+
+        // 활성 예약이 있는 좌석 ID들 조회
+        List<Long> reservedSeatIds = queryFactory
+                .select(reservationSeat.seat.id)
+                .from(reservationSeat)
+                .where(
+                        reservationSeat.seat.id.in(seatIds)
+                                .and(reservationSeat.reservation.status.in(
+                                        ReservationStatus.IN_PROGRESS,
+                                        ReservationStatus.CONFIRMED
+                                ))
+                )
+                .fetch();
+
+        // 모든 좌석 ID에 대해 예약 상태 매핑
+        return seatIds.stream()
+                .collect(Collectors.toMap(
+                        seatId -> seatId,
+                        seatId -> reservedSeatIds.contains(seatId)
+                ));
     }
 
 }

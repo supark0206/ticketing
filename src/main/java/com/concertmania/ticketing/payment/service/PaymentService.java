@@ -1,5 +1,7 @@
 package com.concertmania.ticketing.payment.service;
 
+import com.concertmania.ticketing.notification.NotificationProducer;
+import com.concertmania.ticketing.payment.dto.ConfirmPaymentResponse;
 import com.concertmania.ticketing.payment.dto.PaymentRequest;
 import com.concertmania.ticketing.payment.dto.PaymentResponse;
 import com.concertmania.ticketing.payment.entity.Payment;
@@ -37,7 +39,7 @@ public class PaymentService {
     private final SeatRepository seatRepository;
     private final ReservationSeatRepository reservationSeatRepository;
     private final RedisTemplate<String, String> redisTemplate;
-    private final EntityManager entityManager;
+    private final NotificationProducer notificationProducer;
 
     @Transactional
     public PaymentResponse startPayment(PaymentRequest request, User user) {
@@ -45,9 +47,9 @@ public class PaymentService {
         Seat seat = seatRepository.findByIdAndDeletedAtIsNull(request.getSeatId())
                 .orElseThrow(() -> new CustomException(ErrorCode.SEAT_NOT_FOUND));
 
-        // DB에서 이미 예약된 좌석인지 확인
-        if (!seat.getReservationSeats().isEmpty()) {
-            throw new CustomException(ErrorCode.IS_ALREADY_RESERVATION);
+        // 예약 좌석 검증
+        if (seatRepository.hasActiveReservations(request.getSeatId())) {
+            throw new CustomException(ErrorCode.CANNOT_DELETE_RESERVED_SEAT);
         }
 
         // Redis 락 확인 및 소유권 검증
@@ -96,7 +98,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public void confirmPayment(String transactionId, boolean paymentSuccess) {
+    public ConfirmPaymentResponse confirmPayment(String transactionId, boolean paymentSuccess) {
 
         Payment payment = paymentRepository.findByTransactionId(transactionId)
                 .orElseThrow(() -> new CustomException(ErrorCode.PAYMENT_NOT_FOUND));
@@ -104,13 +106,13 @@ public class PaymentService {
         Reservation reservation = payment.getReservation();
 
         // 상태 검증 - 이미 처리된 결제인지 확인
-        if (payment.getStatus() != PaymentStatus.IN_PROGRESS) {
+        if (payment.getStatus() == PaymentStatus.SUCCESS) {
             log.warn("[결제 상태 오류] 이미 처리된 결제. TransactionId: {}, Status: {}",
                     transactionId, payment.getStatus());
             throw new CustomException(ErrorCode.PAYMENT_ALREADY_PROCESSED);
         }
 
-        if (reservation.getStatus() != ReservationStatus.IN_PROGRESS) {
+        if (reservation.getStatus() == ReservationStatus.CONFIRMED) {
             log.warn("[예약 상태 오류] 이미 처리된 예약. ReservationId: {}, Status: {}",
                     reservation.getId(), reservation.getStatus());
             throw new CustomException(ErrorCode.RESERVATION_ALREADY_PROCESSED);
@@ -143,6 +145,19 @@ public class PaymentService {
 
             log.info("[결제 성공] User: {}, Seat: {}, TransactionId: {}",
                     user.getId(), seat.getId(), transactionId);
+
+            // 이메일 발송 처리
+            notificationProducer.sendEmailNotification(
+                    user.getEmail(),
+                    "[ConcertMania] 예매 완료 안내",
+                    String.format("%s님, 콘서트 예매가 완료되었습니다. 좌석: %s구역 %s열 %s번",
+                            user.getEmail(),
+                            seat.getSection(),
+                            seat.getRow(),
+                            seat.getNumber()
+                    )
+            );
+
         } else {
             payment.updateStatus(PaymentStatus.FAILED); // 결제 실패
             reservation.updateStatus(ReservationStatus.FAILED); // 예약 실패
@@ -153,6 +168,11 @@ public class PaymentService {
 
         // Redis 락 해제 (성공/실패 관계없이)
         cleanupRedisLock(reservation, paymentSuccess ? "결제 성공" : "결제 실패");
+
+        return ConfirmPaymentResponse.builder()
+                .transactionId(transactionId)
+                .isSuccess(paymentSuccess)
+                .build();
     }
 
     // 레디스 락 정리 메소드

@@ -1,6 +1,6 @@
 package com.concertmania.ticketing.user.service;
 
-import com.concertmania.ticketing.security.JwtTokenProvider;
+import com.concertmania.ticketing.config.security.JwtTokenProvider;
 import com.concertmania.ticketing.user.dto.UserResponse;
 import com.concertmania.ticketing.user.dto.LoginRequest;
 import com.concertmania.ticketing.user.dto.SignupRequest;

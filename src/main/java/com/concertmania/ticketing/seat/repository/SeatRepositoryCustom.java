@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public interface SeatRepositoryCustom {
 
@@ -21,4 +23,11 @@ public interface SeatRepositoryCustom {
 
     // 콘서트별 좌석 중복 검증
     boolean existsByConcertIdAndSeats(Long concertId, List<SeatCreateRequest> requests);
+
+    // 예약 불가능 좌석 검증
+    boolean hasActiveReservations(Long id);
+
+    // 좌석 목록의 예약 상태를 한 번에 조회 (성능 개선)
+    Map<Long, Boolean> getActiveReservationStatusBySeatIds(List<Long> seatIds);
+
 }

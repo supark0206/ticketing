@@ -25,7 +25,7 @@ public class SeatResponse {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public static SeatResponse from(Seat seat) {
+    public static SeatResponse from(Seat seat, boolean isReserved) {
         return new SeatResponse(
                 seat.getId(),
                 seat.getConcert().getId(),
@@ -35,7 +35,7 @@ public class SeatResponse {
                 seat.getNumber(),
                 seat.getGrade(),
                 seat.getPrice(),
-                !seat.getReservationSeats().isEmpty(),
+                isReserved,
                 seat.getCreatedAt(),
                 seat.getUpdatedAt()
         );
