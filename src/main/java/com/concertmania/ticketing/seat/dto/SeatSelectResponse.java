@@ -26,7 +26,7 @@ public class SeatSelectResponse {
     private LocalDateTime updatedAt;
     private LocalDateTime expiresAt; // 좌석 만료 시간
 
-    public static SeatSelectResponse from(Seat seat, LocalDateTime expiresAt) {
+    public static SeatSelectResponse from(Seat seat, LocalDateTime expiresAt, boolean isReserved) {
         return new SeatSelectResponse(
                 seat.getId(),
                 seat.getConcert().getId(),
@@ -36,7 +36,7 @@ public class SeatSelectResponse {
                 seat.getNumber(),
                 seat.getGrade(),
                 seat.getPrice(),
-                !seat.getReservationSeats().isEmpty(),
+                isReserved,
                 seat.getCreatedAt(),
                 seat.getUpdatedAt(),
                 expiresAt

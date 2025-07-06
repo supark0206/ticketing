@@ -1,4 +1,4 @@
-package com.concertmania.ticketing.security;
+package com.concertmania.ticketing.config.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;

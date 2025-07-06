@@ -1,4 +1,4 @@
-package com.concertmania.ticketing.security;
+package com.concertmania.ticketing.config.security;
 
 import com.concertmania.ticketing.user.service.UserDetailService;
 import lombok.RequiredArgsConstructor;

@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -84,8 +85,14 @@ public class SeatService {
                 .collect(Collectors.toList());
         List<Seat> savedSeats = seatRepository.saveAll(seats);
 
+        // 벌크 쿼리로 예약 상태 조회
+        List<Long> seatIds = savedSeats.stream()
+                .map(Seat::getId)
+                .collect(Collectors.toList());
+        Map<Long, Boolean> reservationStatusMap = seatRepository.getActiveReservationStatusBySeatIds(seatIds);
+
         return savedSeats.stream()
-                .map(SeatResponse::from)
+                .map(seat -> SeatResponse.from(seat, reservationStatusMap.getOrDefault(seat.getId(), false)))
                 .collect(Collectors.toList());
     }
 
@@ -95,7 +102,14 @@ public class SeatService {
         }
 
         Page<Seat> seats = seatRepository.findByConcertIdNotDeletedPage(concertId, pageable);
-        return seats.map(SeatResponse::from);
+        
+        // 벌크 쿼리로 예약 상태 조회
+        List<Long> seatIds = seats.getContent().stream()
+                .map(Seat::getId)
+                .collect(Collectors.toList());
+        Map<Long, Boolean> reservationStatusMap = seatRepository.getActiveReservationStatusBySeatIds(seatIds);
+        
+        return seats.map(seat -> SeatResponse.from(seat, reservationStatusMap.getOrDefault(seat.getId(), false)));
     }
 
     public List<SeatResponse> getSeatSeatMapByConcert(Long concertId) {
@@ -104,8 +118,15 @@ public class SeatService {
         }
 
         List<Seat> seats = seatRepository.findByConcertIdNotDeleted(concertId);
+        
+        // 벌크 쿼리로 예약 상태 조회
+        List<Long> seatIds = seats.stream()
+                .map(Seat::getId)
+                .collect(Collectors.toList());
+        Map<Long, Boolean> reservationStatusMap = seatRepository.getActiveReservationStatusBySeatIds(seatIds);
+        
         return seats.stream()
-                .map(SeatResponse::from)
+                .map(seat -> SeatResponse.from(seat, reservationStatusMap.getOrDefault(seat.getId(), false)))
                 .collect(Collectors.toList());
     }
 
@@ -115,8 +136,15 @@ public class SeatService {
         }
 
         List<Seat> seats = seatRepository.findByConcertIdAndGradeNotDeleted(concertId, grade);
+        
+        // 벌크 쿼리로 예약 상태 조회
+        List<Long> seatIds = seats.stream()
+                .map(Seat::getId)
+                .collect(Collectors.toList());
+        Map<Long, Boolean> reservationStatusMap = seatRepository.getActiveReservationStatusBySeatIds(seatIds);
+        
         return seats.stream()
-                .map(SeatResponse::from)
+                .map(seat -> SeatResponse.from(seat, reservationStatusMap.getOrDefault(seat.getId(), false)))
                 .collect(Collectors.toList());
     }
 
@@ -124,7 +152,7 @@ public class SeatService {
         Seat seat = seatRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.SEAT_NOT_FOUND));
 
-        return SeatResponse.from(seat);
+        return SeatResponse.from(seat, seatRepository.hasActiveReservations(seat.getId()));
     }
 
     @Transactional
@@ -132,7 +160,7 @@ public class SeatService {
         Seat seat = seatRepository.findByIdAndDeletedAtIsNull(seatId)
                 .orElseThrow(() -> new CustomException(ErrorCode.SEAT_NOT_FOUND));
 
-        if (!seat.getReservationSeats().isEmpty()) {
+        if (seatRepository.hasActiveReservations(seatId)) {
             throw new CustomException(ErrorCode.IS_ALREADY_RESERVATION);
         }
 
@@ -172,7 +200,7 @@ public class SeatService {
                     .truncatedTo(ChronoUnit.SECONDS);
         }
 
-        return SeatSelectResponse.from(seat, expiresAt);
+        return SeatSelectResponse.from(seat, expiresAt, seatRepository.hasActiveReservations(seat.getId()));
     }
 
     @Transactional
@@ -188,7 +216,7 @@ public class SeatService {
                 request.getPrice()
         );
 
-        return SeatResponse.from(updatedSeat);
+        return SeatResponse.from(updatedSeat, seatRepository.hasActiveReservations(seat.getId()));
     }
 
     @Transactional
@@ -196,7 +224,7 @@ public class SeatService {
         Seat seat = seatRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.SEAT_NOT_FOUND));
 
-        if (!seat.getReservationSeats().isEmpty()) {
+        if (seatRepository.hasActiveReservations(id)) {
             throw new CustomException(ErrorCode.CANNOT_DELETE_RESERVED_SEAT);
         }
 

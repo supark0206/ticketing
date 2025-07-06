@@ -6,11 +6,7 @@ import com.concertmania.ticketing.reservation.enums.ReservationStatus;
 import com.concertmania.ticketing.user.entity.User;
 import com.concertmania.ticketing.utils.base.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "reservation")
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "id", callSuper = false)
@@ -45,19 +42,13 @@ public class Reservation extends BaseTimeEntity {
     @Column(nullable = false)
     private LocalDateTime expireTime;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ReservationSeat> reservationSeats;
-
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Payment> payments;
-
-    public enum Status {
-        PENDING, CONFIRMED, CANCELED, EXPIRED
-    }
-
     @PrePersist
     protected void onCreate() {
         this.reservationTime = LocalDateTime.now();
         this.expireTime = this.reservationTime.plusMinutes(10);
+    }
+    
+    public void updateStatus(ReservationStatus status) {
+        this.status = status;
     }
 }

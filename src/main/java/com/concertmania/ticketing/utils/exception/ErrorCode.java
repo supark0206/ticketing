@@ -23,6 +23,11 @@ public enum ErrorCode {
     SEAT_ALREADY_LOCKED(HttpStatus.CONFLICT, "다른 사용자가 이미 선택한 좌석입니다."),
     SEAT_LOCK_RETRY_NEEDED(HttpStatus.CONFLICT,"좌석 선점 중 충돌이 발생했습니다. 다시 시도해주세요."),
     SEAT_LOCK_EXPIRED(HttpStatus.CONFLICT, "좌석 점유 시간이 만료되었습니다. 다시 선택해주세요."),
+    QUEUE_TOKEN_NOT_FOUND(HttpStatus.CONFLICT, "대기열 토큰을 찾을 수 없습니다."),
+    QUEUE_NOT_ACTIVE(HttpStatus.CONFLICT, "활성 상태가 아닌 대기열입니다."),
+    ALREADY_IN_QUEUE(HttpStatus.CONFLICT, "이미 대기열에 등록되어 있습니다."),
+    QUEUE_NOT_FOUND(HttpStatus.NOT_FOUND, "대기열 정보를 찾을 수 없습니다."),
+    SEAT_NOT_SELECTED(HttpStatus.NOT_FOUND, "선택된 좌석을 찾을 수 없습니다."),
 
 
     //405 METHOD_NOT_ALLOWED : 허용 되지않은 Request Method 호출
@@ -40,6 +45,11 @@ public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY, "유효하지 않은 요청입니다."),
     INVALID_CONCERT_ID(HttpStatus.UNPROCESSABLE_ENTITY, "모든 좌석은 동일한 콘서트에 속해야 합니다."),
     DUPLICATE_SEAT_IN_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY, "요청 내에 중복된 좌석이 있습니다."),
+    RESERVATION_SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "예약 좌석을 찾을 수 없습니다."),
+    RESERVATION_EXPIRED(HttpStatus.UNPROCESSABLE_ENTITY, "예약이 만료되었습니다."),
+    RESERVATION_ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 처리된 예약입니다."),
+    PAYMENT_ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 처리된 결제입니다."),
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "결제 정보를 찾을 수 없습니다."),
 
     //500 INTERNAL_SERVER_ERROR : 내부 서버 오류
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"내부 서버 오류입니다.")

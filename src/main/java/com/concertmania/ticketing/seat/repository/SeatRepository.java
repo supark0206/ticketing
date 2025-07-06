@@ -10,4 +10,5 @@ import java.util.Optional;
 public interface SeatRepository extends JpaRepository<Seat, Long>, SeatRepositoryCustom {
 
     Optional<Seat> findByIdAndDeletedAtIsNull(Long id);
+
 }
