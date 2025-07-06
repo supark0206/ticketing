@@ -3,15 +3,12 @@ package com.concertmania.ticketing.reservation.entity;
 import com.concertmania.ticketing.seat.entity.Seat;
 import com.concertmania.ticketing.utils.base.BaseTimeEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "reservation_seat")
 @Getter
+@Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @EqualsAndHashCode(of = "id", callSuper = false)

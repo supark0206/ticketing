@@ -45,6 +45,11 @@ public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY, "유효하지 않은 요청입니다."),
     INVALID_CONCERT_ID(HttpStatus.UNPROCESSABLE_ENTITY, "모든 좌석은 동일한 콘서트에 속해야 합니다."),
     DUPLICATE_SEAT_IN_REQUEST(HttpStatus.UNPROCESSABLE_ENTITY, "요청 내에 중복된 좌석이 있습니다."),
+    RESERVATION_SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "예약 좌석을 찾을 수 없습니다."),
+    RESERVATION_EXPIRED(HttpStatus.UNPROCESSABLE_ENTITY, "예약이 만료되었습니다."),
+    RESERVATION_ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 처리된 예약입니다."),
+    PAYMENT_ALREADY_PROCESSED(HttpStatus.CONFLICT, "이미 처리된 결제입니다."),
+    PAYMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "결제 정보를 찾을 수 없습니다."),
 
     //500 INTERNAL_SERVER_ERROR : 내부 서버 오류
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR,"내부 서버 오류입니다.")
