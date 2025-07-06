@@ -1,4 +1,4 @@
-package com.concertmania.ticketing.concert.controller;
+package com.concertmania.ticketing.concert.docs;
 
 import com.concertmania.ticketing.concert.dto.ConcertCreateRequest;
 import com.concertmania.ticketing.concert.dto.ConcertResponse;
@@ -7,7 +7,6 @@ import com.concertmania.ticketing.utils.exception.ErrorResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -22,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import jakarta.validation.Valid;
 
-@Tag(name = "Concert Management", description = "콘서트 관리 관련 API")
+@Tag(name = "Concert 관리", description = "콘서트 관리 관련 API")
 public interface ConcertControllerDocs {
 
     @Operation(
@@ -36,23 +35,7 @@ public interface ConcertControllerDocs {
                     description = "콘서트 생성 성공",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ConcertResponse.class),
-                            examples = @ExampleObject(
-                                    name = "콘서트 생성 성공 예시",
-                                    value = """
-                                    {
-                                        "id": 1,
-                                        "title": "IU 콘서트 2024",
-                                        "concertDate": "2024-12-31T19:00:00",
-                                        "venue": "올림픽공원 체조경기장",
-                                        "openTime": "2024-12-01T10:00:00",
-                                        "closeTime": "2024-12-30T23:59:59",
-                                        "status": "SCHEDULED",
-                                        "createdAt": "2024-01-01T10:00:00",
-                                        "updatedAt": "2024-01-01T10:00:00"
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ConcertResponse.class)
                     )
             ),
             @ApiResponse(
@@ -60,16 +43,7 @@ public interface ConcertControllerDocs {
                     description = "잘못된 요청 - 유효성 검사 실패",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "유효성 검사 실패",
-                                    value = """
-                                    {
-                                        "status": 400,
-                                        "message": "콘서트 제목은 필수입니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             ),
             @ApiResponse(
@@ -95,19 +69,7 @@ public interface ConcertControllerDocs {
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ConcertCreateRequest.class),
-                            examples = @ExampleObject(
-                                    name = "콘서트 생성 요청 예시",
-                                    value = """
-                                    {
-                                        "title": "IU 콘서트 2024",
-                                        "venue": "올림픽공원 체조경기장",
-                                        "concertDate": "2024-12-31T19:00:00",
-                                        "openTime": "2024-12-01T10:00:00",
-                                        "closeTime": "2024-12-30T23:59:59"
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ConcertCreateRequest.class)
                     )
             )
             @Valid @RequestBody ConcertCreateRequest request
@@ -122,33 +84,7 @@ public interface ConcertControllerDocs {
                     responseCode = "200",
                     description = "콘서트 목록 조회 성공",
                     content = @Content(
-                            mediaType = "application/json",
-                            examples = @ExampleObject(
-                                    name = "콘서트 목록 조회 성공 예시",
-                                    value = """
-                                    {
-                                        "content": [
-                                            {
-                                                "id": 1,
-                                                "title": "IU 콘서트 2024",
-                                                "concertDate": "2024-12-31T19:00:00",
-                                                "venue": "올림픽공원 체조경기장",
-                                                "openTime": "2024-12-01T10:00:00",
-                                                "closeTime": "2024-12-30T23:59:59",
-                                                "status": "SCHEDULED",
-                                                "createdAt": "2024-01-01T10:00:00",
-                                                "updatedAt": "2024-01-01T10:00:00"
-                                            }
-                                        ],
-                                        "pageable": {
-                                            "pageNumber": 0,
-                                            "pageSize": 20
-                                        },
-                                        "totalElements": 1,
-                                        "totalPages": 1
-                                    }
-                                    """
-                            )
+                            mediaType = "application/json"
                     )
             )
     })
@@ -181,16 +117,7 @@ public interface ConcertControllerDocs {
                     description = "콘서트를 찾을 수 없음",
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ErrorResponse.class),
-                            examples = @ExampleObject(
-                                    name = "콘서트 없음",
-                                    value = """
-                                    {
-                                        "status": 422,
-                                        "message": "콘서트를 찾을 수 없습니다."
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ErrorResponse.class)
                     )
             )
     })
@@ -255,19 +182,7 @@ public interface ConcertControllerDocs {
                     required = true,
                     content = @Content(
                             mediaType = "application/json",
-                            schema = @Schema(implementation = ConcertUpdateRequest.class),
-                            examples = @ExampleObject(
-                                    name = "콘서트 수정 요청 예시",
-                                    value = """
-                                    {
-                                        "title": "IU 콘서트 2024 (수정됨)",
-                                        "venue": "잠실실내체육관",
-                                        "concertDate": "2024-12-31T19:00:00",
-                                        "openTime": "2024-12-01T10:00:00",
-                                        "closeTime": "2024-12-30T23:59:59"
-                                    }
-                                    """
-                            )
+                            schema = @Schema(implementation = ConcertUpdateRequest.class)
                     )
             )
             @Valid @RequestBody ConcertUpdateRequest request

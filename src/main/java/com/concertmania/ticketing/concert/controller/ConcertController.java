@@ -17,7 +17,7 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/concert")
 @RequiredArgsConstructor
-public class ConcertController implements ConcertControllerDocs {
+public class ConcertController implements com.concertmania.ticketing.concert.docs.ConcertControllerDocs {
 
     private final ConcertService concertService;
 

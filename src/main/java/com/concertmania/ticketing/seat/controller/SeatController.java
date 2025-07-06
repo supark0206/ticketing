@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/seat")
 @RequiredArgsConstructor
-public class SeatController implements SeatControllerDocs {
+public class SeatController implements com.concertmania.ticketing.seat.docs.SeatControllerDocs {
 
     private final SeatService seatService;
 
