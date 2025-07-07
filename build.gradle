@@ -66,7 +66,10 @@ dependencies {
 	// Mail
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
-	// Test - 수정된 부분
+	// Logback JSON encoder for structured logging
+	implementation 'net.logstash.logback:logstash-logback-encoder:7.4'
+
+	// Test
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testcontainers:testcontainers:1.19.3'
 	testImplementation 'org.testcontainers:junit-jupiter:1.19.3'

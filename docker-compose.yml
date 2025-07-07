@@ -14,6 +14,10 @@ services:
       - mailhog
     environment:
       - SPRING_PROFILES_ACTIVE=dev
+    labels:
+      - "logging=promtail"
+      - "logging.jobname=concert-app"
+
 
   # 데이터베이스
   postgres:
@@ -57,7 +61,10 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-config:/etc/prometheus/
+    configs:
+      - source: prometheus-config
+        target: /etc/prometheus/prometheus.yml
 
   grafana:
     image: grafana/grafana
@@ -65,3 +72,45 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+
+  loki:
+    image: grafana/loki:latest
+    ports:
+      - "3100:3100"
+    volumes:
+      - loki-data:/loki
+      - ./loki-config.yml:/etc/loki/loki-config.yml
+    command: -config.file=/etc/loki/loki-config.yml
+
+  promtail:
+    image: grafana/promtail:latest
+    volumes:
+      - ./promtail-config.yml:/etc/promtail/promtail-config.yml
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    command:
+      - -config.file=/etc/promtail/promtail-config.yml
+      - -config.expand-env=true
+    environment:
+      - LOKI_URL=http://loki:3100/loki/api/v1/push
+    depends_on:
+      - loki
+      - concert-app
+    restart: unless-stopped
+
+volumes:
+  prometheus-config:
+  grafana-data:
+  loki-data:  # Loki 데이터 영구 저장
+
+configs:
+  prometheus-config:
+    content: |
+      global:
+        scrape_interval: 15s
+      scrape_configs:
+        - job_name: 'spring-boot'
+          static_configs:
+            - targets: ['host.docker.internal:8080']
+          metrics_path: '/actuator/prometheus'
