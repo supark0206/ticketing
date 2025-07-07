@@ -16,7 +16,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "seat")
+@Table(name = "seat", indexes = {
+    @Index(name = "idx_seat_concert_id", columnList = "concert_id")
+})
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
