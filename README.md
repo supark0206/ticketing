@@ -32,7 +32,7 @@
 
 [접속링크](https://www.mermaidchart.com/app/projects/093e7a54-fdfe-49ac-8b92-fa9a9385b74e/diagrams/2638dfd7-99af-45af-8113-4f173a5c27ff/share/invite/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkb2N1bWVudElEIjoiMjYzOGRmZDctOTlhZi00NWFmLTgxMTMtNGYxNzNhNWMyN2ZmIiwiYWNjZXNzIjoiRWRpdCIsImlhdCI6MTc1MTg4MTMwMn0.V7sdDuy6ubOGtdwBRsLD8fyPYEvSlljGiwG27A7MwV8)
 
-![img.png](img.png)
+![img.png](image/img.png)
 
 - 인덱스 전략
   - `users.email` (UK)
@@ -49,9 +49,9 @@
 ### 모니터링 & 관찰 가능성
 - **Grafana** (시각화 대시보드)
 - **Prometheus** (메트릭 수집)
-  - ![img_2.png](img_2.png)
+  - ![img_2.png](image/img_2.png)
 - **Loki** (중앙집중 로그 관리)
-  - ![img_1.png](img_1.png)
+  - ![img_1.png](image/img_1.png)
 - **Promtail** (로그 수집)
 - **Spring Boot Actuator** (애플리케이션 메트릭)
 
@@ -97,6 +97,9 @@
 
 - MailHog: http://localhost:8025
 
+- Postgres: localhost:5433/ticketing (postgres/1234)
+  - 도커 실행시 5433포트 / 로컬 직접 실행시 5432
+
 ---
 
 ### 애플리케이션 프로필
@@ -109,13 +112,11 @@
 
 ### 성능 최적화
 - **Redis 캐싱**: 좌석 가용성 및 사용자 세션 캐싱으로 데이터베이스 부하 감소
-- **Connection Pool**: HikariCP 설정으로 데이터베이스 연결 최적화
 - **QueryDSL**: 복잡한 쿼리 최적화 및 타입 안전성 보장
 - **비동기 처리**: RabbitMQ를 통한 이메일 발송 및 알림 처리
 
 ### 동시성 제어
-- **좌석 선택**: Redis 기반 분산 락으로 동시 선택 방지
-- **예약 만료**: 배치 작업으로 만료된 예약 자동 처리
+- **좌석 선택**: Redis 기반 락으로 동시 선택 방지
 - **결제 처리**: 멱등성 키(`transaction_id`)로 중복 결제 방지
 
 ### 모니터링 및 관찰성
