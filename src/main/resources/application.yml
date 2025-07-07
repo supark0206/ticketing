@@ -99,15 +99,17 @@ jwt:
 
 # 로깅 설정
 logging:
+  file:
+    path: /app/logs
+    name: application.log
   level:
     com.concertmania.ticketing: DEBUG
     org.springframework.security: DEBUG
-    org.springframework.mail: DEBUG
-    org.springframework.amqp: DEBUG
+    org.springframework.web: DEBUG
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE
   pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 # 모니터링 설정
 management:
@@ -118,3 +120,5 @@ management:
   endpoint:
     health:
       show-details: always
+    prometheus:
+      enabled: true

@@ -99,21 +99,9 @@ jwt:
   secret: ${JWT_SECRET:dGlja2V0aW5nLXNlY3JldC1rZXktZm9yLWp3dC10b2tlbi1nZW5lcmF0aW9uLWFuZC12YWxpZGF0aW9uLWluLXNwcmluZy1ib290LWFwcGxpY2F0aW9u}
   token-validity-in-seconds: ${JWT_TOKEN_VALIDITY:86400}
 
-# 로깅 설정
+# 로깅 설정 (logback-spring.xml에서 관리)
 logging:
-  level:
-    com.concertmania.ticketing: INFO
-    org.springframework.security: WARN
-    org.springframework.mail: INFO
-    org.springframework.amqp: INFO
-    org.hibernate.SQL: WARN
-    org.springframework.web: WARN
-  pattern:
-    console: "%d{yyyy-MM-dd HH:mm:ss} [%level] %logger{36} - %msg%n"
-  file:
-    name: /var/log/ticketing/application.log
-    max-size: 100MB
-    max-history: 30
+  config: classpath:logback-spring.xml
 
 # 모니터링 설정
 management:
@@ -124,5 +112,3 @@ management:
   endpoint:
     health:
       show-details: always  # Docker 환경에서는 디버깅을 위해 details 표시
-  server:
-    port: 8081

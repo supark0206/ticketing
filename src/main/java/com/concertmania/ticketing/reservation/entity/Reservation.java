@@ -12,7 +12,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "reservation")
+@Table(name = "reservation", indexes = {
+    @Index(name = "idx_reservation_user_id", columnList = "user_id"),
+    @Index(name = "idx_reservation_concert_id", columnList = "concert_id")
+})
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
