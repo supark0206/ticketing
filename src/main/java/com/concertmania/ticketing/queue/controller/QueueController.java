@@ -1,6 +1,7 @@
 package com.concertmania.ticketing.queue.controller;
 
 
+import com.concertmania.ticketing.queue.docs.QueueControllerDocs;
 import com.concertmania.ticketing.queue.dto.QueueRegisterResponse;
 import com.concertmania.ticketing.queue.dto.QueueStatusResponse;
 import com.concertmania.ticketing.user.entity.User;
@@ -25,7 +26,7 @@ import java.util.concurrent.CompletableFuture;
 @RequestMapping("/api/queue")
 @RequiredArgsConstructor
 @Slf4j
-public class QueueController {
+public class QueueController implements QueueControllerDocs {
 
     private final QueueService queueService;
 
