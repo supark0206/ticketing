@@ -1,4 +1,4 @@
-package com.concertmania.ticketing.concert.controller;
+package com.concertmania.ticketing.concert;
 
 import com.concertmania.ticketing.concert.dto.ConcertCreateRequest;
 import com.concertmania.ticketing.concert.dto.ConcertResponse;
@@ -40,7 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Testcontainers
 @Transactional
 @ActiveProfiles("test")
-public class ConcertControllerIntegrationTest {
+public class ConcertIntegrationTest {
 
     @Container
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
