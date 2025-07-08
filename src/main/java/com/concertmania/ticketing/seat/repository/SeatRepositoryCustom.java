@@ -30,4 +30,7 @@ public interface SeatRepositoryCustom {
     // 좌석 목록의 예약 상태를 한 번에 조회 (성능 개선)
     Map<Long, Boolean> getActiveReservationStatusBySeatIds(List<Long> seatIds);
 
+    // 예약 가능 상태의 좌석 카운팅
+    List<Seat> findByAvailableSeat(Long concertId);
+
 }

@@ -1,11 +1,13 @@
 package com.concertmania.ticketing.seat.repository;
 
+import com.concertmania.ticketing.concert.entity.QConcert;
 import com.concertmania.ticketing.reservation.entity.QReservation;
 import com.concertmania.ticketing.reservation.entity.QReservationSeat;
 import com.concertmania.ticketing.reservation.enums.ReservationStatus;
 import com.concertmania.ticketing.seat.dto.SeatCreateRequest;
 import com.concertmania.ticketing.seat.entity.QSeat;
 import com.concertmania.ticketing.seat.entity.Seat;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -30,6 +32,7 @@ public class SeatRepositoryImpl implements SeatRepositoryCustom {
     private final JPAQueryFactory queryFactory;
     QSeat seat = QSeat.seat;
     QReservationSeat reservationSeat = QReservationSeat.reservationSeat;
+    QConcert concert = QSeat.seat.concert;
     QReservation reservation = QReservation.reservation;
 
     private BooleanExpression notDeleted() {
@@ -175,5 +178,36 @@ public class SeatRepositoryImpl implements SeatRepositoryCustom {
                         seatId -> reservedSeatIds.contains(seatId)
                 ));
     }
+
+    @Override
+    public List<Seat> findByAvailableSeat(Long concertId) {
+
+        // 예약된 좌석 중 사용 불가능한 상태의 좌석 ID들 조회
+        List<Long> unavailableSeatIds = queryFactory
+                .select(reservationSeat.seat.id)
+                .from(reservationSeat)
+                .where(
+                    reservationSeat.seat.concert.id.eq(concertId)
+                            .and(reservationSeat.reservation.status.in(
+                                    ReservationStatus.IN_PROGRESS,
+                                    ReservationStatus.CONFIRMED
+                            ))
+                )
+                .fetch();
+
+        // 전체 좌석 중 사용 불가능한 좌석을 제외한 좌석들 조회
+        BooleanBuilder whereCondition = new BooleanBuilder();
+        whereCondition.and(seat.concert.id.eq(concertId));
+        if (!unavailableSeatIds.isEmpty()) {
+            whereCondition.and(seat.id.notIn(unavailableSeatIds));
+        }
+
+        return queryFactory
+                .selectFrom(seat)
+                .where(whereCondition)
+                .orderBy(seat.id.asc())
+                .fetch();
+    }
+
 
 }

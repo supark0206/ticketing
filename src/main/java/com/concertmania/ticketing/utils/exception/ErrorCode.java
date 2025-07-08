@@ -11,6 +11,7 @@ public enum ErrorCode {
     //400 BAD_REQUEST : 잘못된 요청
     BAD_REQUEST(HttpStatus.BAD_REQUEST,"잘못된 요청입니다."),
     USER_REGISTER_ERROR(HttpStatus.BAD_REQUEST, "회원가입에 실패하였습니다."),
+    FAIL_REGISTER_QUEUE(HttpStatus.BAD_REQUEST, "대기열에 실패하였습니다"),
 
     //404 NOT_FOUND : 리소스를 찾을 수 없음
     NOT_FOUND(HttpStatus.NOT_FOUND, "리소스를 찾을 수 없습니다."),

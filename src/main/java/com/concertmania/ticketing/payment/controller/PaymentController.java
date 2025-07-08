@@ -38,9 +38,9 @@ public class PaymentController implements PaymentControllerDocs {
         boolean paymentSuccess = mockPaymentProcess();
 
         // 결제 완료 처리
-        paymentService.confirmPayment(request.getTransactionId(), paymentSuccess);
+        ConfirmPaymentResponse confirmPaymentResponse = paymentService.confirmPayment(request.getTransactionId(), paymentSuccess);
 
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(confirmPaymentResponse);
     }
 
     private boolean mockPaymentProcess() {
