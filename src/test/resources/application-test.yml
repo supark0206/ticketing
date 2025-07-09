@@ -44,6 +44,14 @@ jwt:
 
 logging:
   level:
-    org.springframework.web: DEBUG
-    org.springframework.security: DEBUG
-    com.concertmania.ticketing: DEBUG
+    org.springframework: WARN
+    org.springframework.boot: WARN
+    org.springframework.test: WARN
+    org.springframework.web: WARN
+    org.springframework.security: WARN
+    org.springframework.data: WARN
+    org.springframework.amqp: ERROR
+    # Hibernate 로그 최소화
+    org.hibernate: WARN
+    org.hibernate.SQL: OFF
+    org.hibernate.type: OFF
