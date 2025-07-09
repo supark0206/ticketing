@@ -29,14 +29,13 @@ public enum ErrorCode {
     ALREADY_IN_QUEUE(HttpStatus.CONFLICT, "이미 대기열에 등록되어 있습니다."),
     QUEUE_NOT_FOUND(HttpStatus.NOT_FOUND, "대기열 정보를 찾을 수 없습니다."),
     SEAT_NOT_SELECTED(HttpStatus.NOT_FOUND, "선택된 좌석을 찾을 수 없습니다."),
-
+    CONCERT_NOT_FOUND(HttpStatus.NOT_FOUND, "콘서트를 찾을 수 없습니다."),
+    SEAT_NOT_FOUND(HttpStatus.NOT_FOUND, "좌석을 찾을 수 없습니다."),
 
     //405 METHOD_NOT_ALLOWED : 허용 되지않은 Request Method 호출
     METHOD_NOT_ALLOWED(HttpStatus.METHOD_NOT_ALLOWED, "허용되지 않은 메서드 호출입니다."),
 
     //422 UNPROCESSABLE_ENTITY : 비즈니스 로직 오류
-    CONCERT_NOT_FOUND(HttpStatus.UNPROCESSABLE_ENTITY, "콘서트를 찾을 수 없습니다."),
-    SEAT_NOT_FOUND(HttpStatus.UNPROCESSABLE_ENTITY, "좌석을 찾을 수 없습니다."),
     INVALID_CONCERT_STATUS(HttpStatus.UNPROCESSABLE_ENTITY, "유효하지 않은 콘서트 상태입니다."),
     RESERVATION_NOT_OPEN_YET(HttpStatus.UNPROCESSABLE_ENTITY, "아직 예매 오픈 시간이 아닙니다."),
     CANNOT_DELETE_RESERVATION_OPEN_CONCERT(HttpStatus.UNPROCESSABLE_ENTITY, "예매 오픈 중인 콘서트는 삭제할 수 없습니다."),

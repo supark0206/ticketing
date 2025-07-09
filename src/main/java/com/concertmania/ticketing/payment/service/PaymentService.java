@@ -171,7 +171,7 @@ public class PaymentService {
 
         return ConfirmPaymentResponse.builder()
                 .transactionId(transactionId)
-                .isSuccess(paymentSuccess)
+                .success(paymentSuccess)
                 .build();
     }
 
